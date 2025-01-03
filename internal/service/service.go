@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"go-wallet-defi/internal/logic"
 	"go-wallet-defi/internal/model"
 )
 
@@ -14,7 +15,8 @@ type IWallet interface {
 }
 
 var (
-	localWallet IWallet
+	localWallet      IWallet
+	localTransaction ITransaction
 )
 
 func Wallet() IWallet {
@@ -22,6 +24,19 @@ func Wallet() IWallet {
 		panic("implement not found for interface IWallet, forgot register?")
 	}
 	return localWallet
+}
+
+// Transaction 获取交易服务
+func Transaction() ITransaction {
+	if localTransaction == nil {
+		localTransaction = &logic.TransactionLogic{}
+	}
+	return localTransaction
+}
+
+// 用于单元测试的mock设置
+func SetTransaction(s ITransaction) {
+	localTransaction = s
 }
 
 // RegisterWallet 注册接口实现类
