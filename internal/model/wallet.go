@@ -3,6 +3,7 @@ package model
 type Wallet struct {
 	Id         uint64 `json:"id"           description:"钱包ID"`
 	UserId     uint64 `json:"userId"       description:"用户ID"`
+	Balance    string `json:"balance"      description:"账户余额"`
 	Address    string `json:"address"      description:"钱包地址"`
 	Mnemonic   string `json:"mnemonic"     description:"助记词(加密存储)"`
 	PrivateKey string `json:"privateKey"   description:"私钥(加密存储)"`
