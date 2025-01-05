@@ -22,6 +22,17 @@ func (d *ContractDao) Update(ctx context.Context, id uint64, data g.Map) error {
 	return err
 }
 
+// GetById 根据ID获取合约
+func (d *ContractDao) GetById(ctx context.Context, id uint64) (*model.Contract, error) {
+	var contract *model.Contract
+	err := g.DB().Model("contract").
+		Ctx(ctx).
+		Where("id", id).
+		Where("status", 1).
+		Scan(&contract)
+	return contract, err
+}
+
 // GetByAddress 根据地址获取合约
 func (d *ContractDao) GetByAddress(ctx context.Context, address, network string) (*model.Contract, error) {
 	var contract *model.Contract
