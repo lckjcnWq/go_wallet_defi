@@ -9,7 +9,7 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 	"go-wallet-defi/internal/dao"
 	"go-wallet-defi/internal/model"
-	"go-wallet-defi/internal/pkg/ethclient"
+	"go-wallet-defi/internal/pkg/ethclientx"
 	"math/big"
 	"strings"
 	"time"
@@ -18,7 +18,7 @@ import (
 // WatchContractEvents 监听合约事件
 func WatchContractEvents() {
 	ctx := context.Background()
-	client := ethclient.GetClient(ctx)
+	client := ethclientx.GetClient(ctx)
 
 	for {
 		// 获取所有合约

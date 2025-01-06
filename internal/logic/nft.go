@@ -12,7 +12,7 @@ import (
 	v1 "go-wallet-defi/api/v1"
 	"go-wallet-defi/internal/dao"
 	"go-wallet-defi/internal/model"
-	"go-wallet-defi/internal/pkg/ethclient"
+	"go-wallet-defi/internal/pkg/ethclientx"
 	"go-wallet-defi/internal/pkg/ipfs"
 	"math/big"
 	"strings"
@@ -73,7 +73,7 @@ func (l *NFTLogic) Mint(ctx context.Context, req *v1.MintNFTReq) (hash string, t
 		return "", "", err
 	}
 	//7.调用合约mint方法
-	client := ethclient.GetClient(ctx)
+	client := ethclientx.GetClient(ctx)
 	parsed, err := abi.JSON(strings.NewReader(contract.ABI))
 	if err != nil {
 		return "", "", err
@@ -200,7 +200,7 @@ func (s *NFTLogic) Transfer(ctx context.Context, nftId uint64, from, to string, 
 	}
 
 	// 调用合约transfer方法
-	client := ethclient.GetClient(ctx)
+	client := ethclientx.GetClient(ctx)
 	parsed, err := abi.JSON(strings.NewReader(contract.ABI))
 	if err != nil {
 		return "", err

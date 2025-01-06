@@ -11,7 +11,7 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 	"go-wallet-defi/internal/dao"
 	"go-wallet-defi/internal/model"
-	"go-wallet-defi/internal/pkg/ethclient"
+	"go-wallet-defi/internal/pkg/ethclientx"
 	"math/big"
 	"strings"
 	"time"
@@ -43,7 +43,7 @@ func (c ContractLogic) Deploy(ctx context.Context, name, abiStr, bytecode, from,
 		data = append(data, input...)
 	}
 	//4.获取nonce
-	client := ethclient.GetClient(ctx)
+	client := ethclientx.GetClient(ctx)
 	nonce, err := client.PendingNonceAt(ctx, common.HexToAddress(from))
 	if err != nil {
 		return "", "", err
@@ -145,7 +145,7 @@ func (s *ContractLogic) Call(ctx context.Context, address, method, argsJson, fro
 		return nil, err
 	}
 
-	client := ethclient.GetClient(ctx)
+	client := ethclientx.GetClient(ctx)
 
 	// 判断是否是只读方法
 	if parsed.Methods[method].IsConstant() {

@@ -9,7 +9,7 @@ import (
 	"go-wallet-defi/internal/dao"
 	"go-wallet-defi/internal/model"
 	"go-wallet-defi/internal/pkg/contracts/nft"
-	"go-wallet-defi/internal/pkg/ethclient"
+	"go-wallet-defi/internal/pkg/ethclientx"
 	"math/big"
 	"strings"
 	"time"
@@ -18,7 +18,7 @@ import (
 // WatchNFTEvents 监听NFT事件
 func WatchNFTEvents() {
 	ctx := context.Background()
-	client := ethclient.GetClient(ctx)
+	client := ethclientx.GetClient(ctx)
 
 	// 解析ERC721 ABI
 	erc721ABI, _ := abi.JSON(strings.NewReader(nft.ERC721ABI))

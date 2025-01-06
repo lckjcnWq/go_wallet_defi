@@ -11,7 +11,7 @@ import (
 	"go-wallet-defi/internal/dao"
 	"go-wallet-defi/internal/model"
 	"go-wallet-defi/internal/pkg/contracts/ercx20"
-	"go-wallet-defi/internal/pkg/ethclient"
+	"go-wallet-defi/internal/pkg/ethclientx"
 	"math/big"
 	"time"
 )
@@ -20,7 +20,7 @@ type TransactionLogic struct{}
 
 // TransferEth 转账ETH
 func (s *TransactionLogic) TransferEth(ctx context.Context, from, to, amount string, gasPrice string, gasLimit uint64) (string, error) {
-	client := ethclient.GetClient(ctx)
+	client := ethclientx.GetClient(ctx)
 	//1.解析地址
 	fromAddress := common.HexToAddress(from)
 	toAddress := common.HexToAddress(to)
@@ -100,7 +100,7 @@ func (s *TransactionLogic) TransferEth(ctx context.Context, from, to, amount str
 
 // TransferToken 转账代币
 func (s *TransactionLogic) TransferToken(ctx context.Context, from, to, amount, token string, gasPrice string, gasLimit uint64) (string, error) {
-	client := ethclient.GetClient(ctx)
+	client := ethclientx.GetClient(ctx)
 
 	// 解析合约地址
 	tokenAddress := common.HexToAddress(token)
@@ -219,7 +219,7 @@ func (s *TransactionLogic) GetTransactions(ctx context.Context, address string, 
 
 // UpdateTransactionStatus 更新交易状态
 func (s *TransactionLogic) UpdateTransactionStatus(ctx context.Context, hash string) error {
-	client := ethclient.GetClient(ctx)
+	client := ethclientx.GetClient(ctx)
 
 	// 获取交易收据
 	receipt, err := client.TransactionReceipt(ctx, common.HexToHash(hash))
