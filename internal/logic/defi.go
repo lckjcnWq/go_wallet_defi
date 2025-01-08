@@ -118,7 +118,7 @@ func (s *DefiLogic) Swap(ctx context.Context, chainId uint64, fromToken, toToken
 // AddLiquidity 添加流动性
 func (s *DefiLogic) AddLiquidity(ctx context.Context, chainId uint64, tokenA, tokenB string, amountA, amountB string, fromAddress string, slippageBps int) (hash string, liquidity string, err error) {
 	// 获取客户端
-	client, err := ethclient.GetClient(chainId)
+	client, err := ethclientx.GetClientByChainId(ctx, chainId)
 	if err != nil {
 		return "", "", err
 	}
@@ -236,7 +236,7 @@ func (s *DefiLogic) AddLiquidity(ctx context.Context, chainId uint64, tokenA, to
 // RemoveLiquidity 移除流动性
 func (s *DefiLogic) RemoveLiquidity(ctx context.Context, chainId uint64, pair string, liquidity string, fromAddress string, slippageBps int) (hash string, amount0, amount1 string, err error) {
 	// 获取客户端
-	client, err := ethclient.GetClient(chainId)
+	client, err := ethclientx.GetClientByChainId(ctx, chainId)
 	if err != nil {
 		return "", "", "", err
 	}
@@ -357,7 +357,7 @@ func (s *DefiLogic) RemoveLiquidity(ctx context.Context, chainId uint64, pair st
 // Supply 存款到Aave
 func (s *DefiLogic) Supply(ctx context.Context, chainId uint64, pool, token string, amount string, fromAddress string) (hash string, err error) {
 	// 获取客户端
-	client, err := ethclient.GetClient(chainId)
+	client, err := ethclientx.GetClientByChainId(ctx, chainId)
 	if err != nil {
 		return "", err
 	}
@@ -436,7 +436,7 @@ func (s *DefiLogic) Supply(ctx context.Context, chainId uint64, pool, token stri
 // Withdraw 从Aave提取
 func (s *DefiLogic) Withdraw(ctx context.Context, chainId uint64, pool, token string, amount string, fromAddress string) (hash string, err error) {
 	// 获取客户端
-	client, err := ethclient.GetClient(chainId)
+	client, err := ethclientx.GetClientByChainId(ctx, chainId)
 	if err != nil {
 		return "", err
 	}
@@ -615,7 +615,7 @@ func (s *DefiLogic) Repay(ctx context.Context, chainId uint64, pool, token strin
 
 // Stake 质押到收益农场
 func (s *DefiLogic) Stake(ctx context.Context, chainId uint64, pool string, amount string, fromAddress string) (hash string, err error) {
-	client, err := ethclient.GetClient(chainId)
+	client, err := ethclientx.GetClientByChainId(ctx, chainId)
 	if err != nil {
 		return "", err
 	}
@@ -731,7 +731,7 @@ func (s *DefiLogic) Unstake(ctx context.Context, chainId uint64, pool string, am
 
 // ClaimReward 领取农场奖励
 func (s *DefiLogic) ClaimReward(ctx context.Context, chainId uint64, pool string, fromAddress string) (hash string, reward string, err error) {
-	client, err := ethclient.GetClient(chainId)
+	client, err := ethclientx.GetClientByChainId(ctx, chainId)
 	if err != nil {
 		return "", "", err
 	}
