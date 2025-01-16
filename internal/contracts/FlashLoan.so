@@ -1,0 +1,87 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@aave/core-v3/contracts/flashloan/base/FlashLoanSimpleReceiverBase.sol";
+import "@aave/core-v3/contracts/interfaces/IPoolAddressesProvider.sol";
+
+contract FlashLoan is FlashLoanSimpleReceiverBase, ReentrancyGuard {
+    // 事件定义
+    event FlashLoanExecuted(
+        address indexed token,
+        uint256 amount,
+        uint256 premium,
+        address initiator
+    );
+
+    constructor(address _addressProvider)
+        FlashLoanSimpleReceiverBase(IPoolAddressesProvider(_addressProvider))
+    {}
+
+    // 执行闪电贷
+    function executeOperation(
+        address asset,
+        uint256 amount,
+        uint256 premium,
+        address initiator,
+        bytes calldata params
+    ) external override returns (bool) {
+        // 确保调用者是Aave池合约
+        require(msg.sender == address(POOL), "Invalid caller");
+
+        // 解码交易参数
+        (address[] memory targets, bytes[] memory data) = abi.decode(
+            params,
+            (address[], bytes[])
+        );
+
+        // 执行套利交易
+        for (uint i = 0; i < targets.length; i++) {
+            (bool success, ) = targets[i].call(data[i]);
+            require(success, "Transaction failed");
+        }
+
+        // 计算需要还款的金额
+        uint256 amountToRepay = amount + premium;
+
+        // 批准还款
+        IERC20(asset).approve(address(POOL), amountToRepay);
+
+        emit FlashLoanExecuted(asset, amount, premium, initiator);
+
+        return true;
+    }
+
+    // 请求闪电贷
+    function executeFlashLoan(
+        address token,
+        uint256 amount,
+        address[] calldata targets,
+        bytes[] calldata data
+    ) external nonReentrant {
+        require(targets.length == data.length, "Invalid parameters");
+
+        // 编码交易参数
+        bytes memory params = abi.encode(targets, data);
+
+        // 请求闪电贷
+        POOL.flashLoanSimple(
+            address(this),
+            token,
+            amount,
+            params,
+            0
+        );
+    }
+
+    // 提取利润
+    function withdrawProfit(
+        address token,
+        address to,
+        uint256 amount
+    ) external {
+        require(msg.sender == owner(), "Only owner");
+        IERC20(token).transfer(to, amount);
+    }
+}
